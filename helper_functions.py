@@ -6,6 +6,7 @@ import itertools
 import random 
 import os
 import datetime
+import zipfile
 import tensorflow as tf
 
 
@@ -220,9 +221,21 @@ def walk_through_folder(folder_path):
         print(f"There are {len(dirnames)} directories and {len(filenames)} images in '{dirpath}'.")
 
 def create_tensorboard_callback(dir_name, experiment_name):
-  log_dir = dir_name + "/" + experiment_name + "/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-  tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir)
-  print(f"Saving Tensorboard log files to: {log_dir}")
-  return tensorboard_callback 
+    """
+    create tensorboard log folders
+    """
+    log_dir = dir_name + "/" + experiment_name + "/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir)
+    print(f"Saving Tensorboard log files to: {log_dir}")
+    return tensorboard_callback 
+
+def unzip_data(filename: str) -> None:
+    """
+    unzip the the zip folder
+    """
+    # unzip our data
+    zip_ref = zipfile.ZipFile(filename)
+    zip_ref.extractall()
+    zip_ref.close()
 
 
