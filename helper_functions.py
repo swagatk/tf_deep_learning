@@ -44,7 +44,9 @@ def plot_decision_boundary(model, X, y):
     plt.ylim(yy.min(), yy.max())
 
 
-def plot_pretty_confusion_matrix(y_test, y_preds, classes=None, figsize=(10,10), text_size=20):
+def plot_pretty_confusion_matrix(y_test, y_preds, classes=None, 
+                            figsize=(10,10), text_size=20,
+                            show_prob=False, save_fig=True):
     """
     Plots a beatiful confusion matrix 
 
@@ -88,6 +90,10 @@ def plot_pretty_confusion_matrix(y_test, y_preds, classes=None, figsize=(10,10),
     ax.xaxis.set_label_position('bottom')
     ax.xaxis.tick_bottom()
 
+    ### change (plot xlabels vertically)
+    plt.xticks(rotation=70, fontsize=text_size)
+    plt.yticks(fontsize=text_size)
+
     # Adjust label size
     ax.yaxis.label.set_size(text_size)
     ax.xaxis.label.set_size(text_size)
@@ -98,11 +104,21 @@ def plot_pretty_confusion_matrix(y_test, y_preds, classes=None, figsize=(10,10),
 
     # plot text on each cell
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        plt.text(j, i, f"{cm[i, j]} ({cm_norm[i, j]*100:.1f}%)",
-            horizontalalignment="center",
-            color="white" if cm[i,j] > threshold else "black",
-            size=text_size
-            )
+        if show_prob:
+            plt.text(j, i, f"{cm[i, j]} ({cm_norm[i, j]*100:.1f}%)",
+                horizontalalignment="center",
+                color="white" if cm[i,j] > threshold else "black",
+                size=text_size)
+        else:
+            plt.text(j, i, f"{cm[i, j]}",
+                horizontalalignment="center",
+                color="white" if cm[i,j] > threshold else "black",
+                size=text_size)
+
+    if save_fig:
+        plt.savefig("confusion_matrix.png")
+            
+
 
 
 def plot_random_images(model, images, true_labels, classes, rows=1, cols=1, scale=2):
