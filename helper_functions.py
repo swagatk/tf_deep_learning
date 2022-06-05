@@ -13,6 +13,10 @@ import tensorflow as tf
 def plot_decision_boundary(model, X, y):
     '''
     Plot the decision boundary created by a model predicting on X
+    Args:
+        model: trained model
+        input: X
+        output: y
     '''
     # Define the axis boundaries of the plot
     x_min, x_max = X[:, 0].min() - 0.1, X[:, 0].max() + 0.1
@@ -119,8 +123,6 @@ def plot_pretty_confusion_matrix(y_test, y_preds, classes=None,
         plt.savefig("confusion_matrix.png")
             
 
-
-
 def plot_random_images(model, images, true_labels, classes, rows=1, cols=1, scale=2):
   """
   picks a random image, plots it and labels it with prediction & true labels
@@ -186,22 +188,28 @@ def plot_training_curves(history):
     plt.legend(loc='best')
 
 
-def load_and_prep_image(filename, img_shape=224):
+def load_and_prep_image(filename, img_shape=224, scale=True):
     """
     loads and preprocess image - resize & normalize
+    Args:
+        filename (str): path to target image
+        img_shape (int): image size
+        scale (bool): whether to scale the image
     """
     # read the file
     img = tf.io.read_file(filename)
 
     # decode the file into an image
-    img = tf.image.decode_image(img)
+    img = tf.image.decode_image(img, channels=3)
 
     # resize the image
     img = tf.image.resize(img, size=(img_shape, img_shape))
 
     # scale the image
-    img = img / 255.
+    if scale:
+        img = img / 255.
     return img
+
 
 def pred_and_plot(model, filename, class_names):
     """
@@ -227,6 +235,7 @@ def pred_and_plot(model, filename, class_names):
     plt.axis(False)
     return pred_prob
 
+
 def walk_through_folder(folder_path):
     """
     Walks through a given folder 
@@ -235,6 +244,7 @@ def walk_through_folder(folder_path):
     """
     for dirpath, dirnames, filenames in os.walk(folder_path):
         print(f"There are {len(dirnames)} directories and {len(filenames)} images in '{dirpath}'.")
+
 
 def create_tensorboard_callback(dir_name, experiment_name):
     """
@@ -245,6 +255,7 @@ def create_tensorboard_callback(dir_name, experiment_name):
     print(f"Saving Tensorboard log files to: {log_dir}")
     return tensorboard_callback 
 
+
 def unzip_data(filename: str) -> None:
     """
     unzip the the zip folder
@@ -253,7 +264,6 @@ def unzip_data(filename: str) -> None:
     zip_ref = zipfile.ZipFile(filename)
     zip_ref.extractall()
     zip_ref.close()
-
 
 
 def compare_histories(original_history, new_history, initial_epochs=5):
