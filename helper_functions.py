@@ -211,12 +211,16 @@ def load_and_prep_image(filename, img_shape=224, scale=True):
     return img
 
 
-def pred_and_plot(model, filename, class_names):
+def pred_and_plot(model, filename, class_names, image_shape=224, scale=False):
     """
     loads an image and predicts its class label using the model
+    Args:
+        model: trained keras model
+        filename: image
+        class_names: list
     """
     # import the image
-    img = load_and_prep_image(filename)
+    img = load_and_prep_image(filename, image_shape, scale)
 
     # make prediction
     pred = model.predict(tf.expand_dims(img, axis=0))
